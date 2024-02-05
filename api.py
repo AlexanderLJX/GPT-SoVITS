@@ -130,6 +130,7 @@ from module.mel_processing import spectrogram_torch
 from my_utils import load_audio
 import config as global_config
 from fastapi import FastAPI, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 
 
 g_config = global_config.Config()
@@ -454,6 +455,14 @@ def handle(refer_wav_path, prompt_text, prompt_language, text, text_language):
 
 app = FastAPI()
 
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows only specified origin, use ["*"] to allow all
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 @app.post("/control")
 async def control(request: Request):
