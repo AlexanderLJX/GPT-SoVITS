@@ -129,6 +129,8 @@ from text.cleaner import clean_text
 from module.mel_processing import spectrogram_torch
 from my_utils import load_audio
 import config as global_config
+from fastapi import FastAPI, UploadFile, File
+
 
 g_config = global_config.Config()
 
@@ -463,6 +465,12 @@ async def control(request: Request):
 async def control(command: str = None):
     return handle_control(command)
 
+@app.post("/upload/audio")
+async def upload_audio(file: UploadFile = File(...)):
+    # save the file
+    with open(file.filename, "wb") as f:
+        f.write(file.file.read())
+    return {"filename": file.filename}
 
 @app.post("/change_refer")
 async def change_refer(request: Request):
